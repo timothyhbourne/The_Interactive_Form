@@ -1,6 +1,7 @@
 const userName = document.querySelector('#name');
 userName.focus();
 
+// Job Role Section //
 const jobRole = document.querySelector('#title');
 const otherJobRole = document.querySelector('#other-job-role');
 otherJobRole.style.display = 'none';
@@ -13,6 +14,7 @@ jobRole.addEventListener('change', (e) => {
   }
 })
 
+// T-Shirt Info Section //
 const shirtDesign = document.querySelector('#design');
 const shirtColor = document.querySelector('#color');
 const colorChildren = shirtColor.children;
@@ -34,8 +36,28 @@ shirtDesign.addEventListener("change", (e) => {
   }
 })
 
+// Activity Section //
 const registerForActivities = document.querySelector('#activities');
 const totalCost = document.querySelector('#activities-cost');
+const actBox = document.querySelector('#activities-box');
+const actLabel = actBox.querySelectorAll('label')
+
+console.log(actBox);
+console.log(actLabel);
+
+// for (let i = 0; i < actBox.length; i++) {
+//   console.log(actInput);
+// }
+
+/* 
+  if activities input checkbox is checked, add class name to the label
+  for (let i = 0; i < activitiesLabel.length; i++) {
+
+  }
+  if (activitiesInput.checked)
+  activitiesLabel.classList.add('focus');
+*/
+
 let totalCostSum = 0;
 
 registerForActivities.addEventListener("change", (e) => {
@@ -46,8 +68,10 @@ registerForActivities.addEventListener("change", (e) => {
     totalCostSum -= dataCost;
   }
   totalCost.innerHTML = `Total: $${totalCostSum}`;
+
 })
 
+// Payment Section //
 const userSelectedPayment = document.querySelector('#payment');
 const creditCard = document.getElementById('credit-card');
 const payPal = document.getElementById('paypal');
@@ -75,6 +99,7 @@ userSelectedPayment.addEventListener("change", (e) => {
   }
 })
 
+// Form Validation Section //
 const userEmail = document.querySelector('#email');
 const ccNumber = document.querySelector('#cc-num');
 const ccZipCode = document.querySelector('#zip');
