@@ -1,7 +1,8 @@
+// Focuses on name input when page loads
 const userName = document.querySelector('#name');
 userName.focus();
 
-// Job Role Section //
+//--------- Job Role Section ---------//
 const jobRole = document.querySelector('#title');
 const otherJobRole = document.querySelector('#other-job-role');
 otherJobRole.style.display = 'none';
@@ -14,7 +15,7 @@ jobRole.addEventListener('change', (e) => {
   }
 })
 
-// T-Shirt Info Section //
+//--------- T-Shirt Info Section ---------//
 const shirtDesign = document.querySelector('#design');
 const shirtColor = document.querySelector('#color');
 const colorChildren = shirtColor.children;
@@ -36,31 +37,16 @@ shirtDesign.addEventListener("change", (e) => {
   }
 })
 
-// Activity Section //
+//--------- Activity Section ---------//
 const registerForActivities = document.querySelector('#activities');
 const totalCost = document.querySelector('#activities-cost');
 const actBox = document.querySelector('#activities-box');
-const actLabel = actBox.querySelectorAll('label')
-
-console.log(actBox);
-console.log(actLabel);
-
-// for (let i = 0; i < actBox.length; i++) {
-//   console.log(actInput);
-// }
-
-/* 
-  if activities input checkbox is checked, add class name to the label
-  for (let i = 0; i < activitiesLabel.length; i++) {
-
-  }
-  if (activitiesInput.checked)
-  activitiesLabel.classList.add('focus');
-*/
+const checkBox = actBox.querySelectorAll('input[type="checkbox"]');
 
 let totalCostSum = 0;
 
 registerForActivities.addEventListener("change", (e) => {
+  //Activities cost & total cost sum
   let dataCost = parseInt(e.target.getAttribute('data-cost'));
   if (e.target.checked) {
     totalCostSum += dataCost;
@@ -69,9 +55,31 @@ registerForActivities.addEventListener("change", (e) => {
   }
   totalCost.innerHTML = `Total: $${totalCostSum}`;
 
-})
+  //Activities focus and blur indicator
+  for (let i = 0; i < checkBox.length; i++) {
+    let label = checkBox[i].parentNode;
+    if (checkBox[i].checked) {
+      label.classList.add('focus');
+    } else {
+      label.classList.remove('focus');
+    }
+  }
 
-// Payment Section //
+  //Checks for any conflicting events, for added future events also
+  const dataDayTime = e.target.getAttribute('data-day-and-time');
+  for (let i = 0; i < checkBox.length; i++) {
+    const currentSelectedTime = checkBox[i].getAttribute('data-day-and-time');
+    if (dataDayTime === currentSelectedTime) {
+      console.log(currentSelectedTime);
+      console.log(dataDayTime)
+    }
+  }
+});
+
+
+
+
+//--------- Payment Section ---------//
 const userSelectedPayment = document.querySelector('#payment');
 const creditCard = document.getElementById('credit-card');
 const payPal = document.getElementById('paypal');
@@ -99,37 +107,145 @@ userSelectedPayment.addEventListener("change", (e) => {
   }
 })
 
-// Form Validation Section //
+//--------- Form & Payment Validation Section ---------//
 const userEmail = document.querySelector('#email');
 const ccNumber = document.querySelector('#cc-num');
 const ccZipCode = document.querySelector('#zip');
 const cvv = document.querySelector('#cvv')
 const theForm = document.querySelector('form');
+const invalidCVV = document.querySelector('#invalid-cvv');
 
-theForm.addEventListener("submit", (e) => {
-  let userNameInput = userName.value;
-  let nameRegex = /^[A-Za-z]+$/;
-  let userNameTest = nameRegex.test(userNameInput)
+invalidCVV.hidden = true;
 
-  let userEmailInput = userEmail.value;
-  let emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-  let userEmailTest = emailRegex.test(userEmailInput);
+// Validation functions that will pass / fail according to the required input //
+function validationPass(element) {
+  element.parentElement.classList.add('valid');
+  element.parentElement.classList.remove('not-valid');
+  element.parentElement.lastElementChild.hidden = true;
+}
+function validationFail(element) {
+  element.parentElement.classList.add('not-valid');
+  element.parentElement.classList.remove('valid');
+  element.parentElement.lastElementChild.hidden = false;
+}
 
-  let ccNumberInput = ccNumber.value;
-  let ccNumberRegex = /^(\d{4})(\d{4})(\d{4})(\d{0,4})$/;
-  let ccNumberTest = ccNumberRegex.test(ccNumberInput);
+// Form validators for each input field (Name, Email, CC Number, Zip, CVV) //
+// Name Validator // 
+function nameValidator() {
+  const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(userName.value);
 
-  let ccZipCodeInput = ccZipCode.value;
-  let ccZipCodeRegex = /^\d{5}$/;
-  let ccZipCodeTest = ccZipCodeRegex.test(ccZipCodeInput);
-
-  let cvvInput = cvv.value;
-  let cvvRegex = /^\d{3}$/;
-  let cvvTest = cvvRegex.test(cvvInput);
-
-  if (userNameTest && userEmailTest && ccNumberTest && ccZipCodeTest && cvvTest) {
-    theForm.submit();
+  if (nameIsValid) {
+    validationPass(userName)
   } else {
+    validationFail(userName)
+  }
+  return nameIsValid;
+}
+
+// Email Validator //
+function emailValidator() {
+  const emailIsValid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(userEmail.value);
+
+  if (emailIsValid) {
+    validationPass(userEmail);
+  } else {
+    validationFail(userEmail)
+  }
+  return emailIsValid
+}
+
+// CC Number Validator -  Added replace method to make it more realistic and appealing. The CC input is applicable for worldwide cc cards that accepts either 2 to 4 last group of numbers  //
+function ccNumValidator() {
+  function formatCcNum(text) {
+    const regex = /^(\d{4})(\d{4})(\d{4})(\d{2,4})$/;
+    return text.replace(regex, '$1-$2-$3-$4')
+  }
+
+  ccNumber.addEventListener("blur", e => {
+    e.target.value = formatCcNum(e.target.value);
+  })
+
+  let ccIsValid = /^(\d{4})(\d{4})(\d{4})(\d{2,4})|(\d{4})-(\d{4})-(\d{4})-(\d{2,4})$/.test(ccNumber.value);
+
+  if (ccIsValid) {
+    validationPass(ccNumber);
+  } else {
+    validationFail(ccNumber)
+  }
+  return ccIsValid
+}
+
+// Zipcod Validator - This zipcode is valid for my country Indonesia which is 5 digit zipcode //
+function zipValidator() {
+  let zipIsValid = /^\d{5}$/.test(ccZipCode.value);
+
+  if (zipIsValid) {
+    validationPass(ccZipCode);
+  } else {
+    validationFail(ccZipCode)
+  }
+  return zipIsValid
+}
+
+// CVV Validator //
+function cvvValidator() {
+  let cvvIsValid = /^\d{3}$/.test(cvv.value);
+
+  if (cvvIsValid) {
+    validationPass(cvv);
+  } else {
+    validationFail(cvv)
+  }
+  return cvvIsValid
+}
+
+// Code taken & modified from previous Treehouse Validation exercise //
+const createListener = (validator) => {
+  return e => {
+    const text = e.target.valid;
+    const valid = validator(text);
+    const showTip = text !== "" && !valid;
+    const tooltip = e.target.nextElementSibling;
+    showOrHideTip(showTip, tooltip);
+  };
+}
+
+// Code inspired from previous Treehouse Validation exercise. Changed the listener to keyup for a more realistic response from an actual web //
+userName.addEventListener('keyup', createListener(nameValidator));
+userEmail.addEventListener('keyup', createListener(emailValidator));
+ccNumber.addEventListener('keyup', createListener(ccNumValidator));
+ccZipCode.addEventListener('keyup', createListener(zipValidator));
+cvv.addEventListener('keyup', createListener(cvvValidator));
+
+// Form submission - Some of the code here was taken & modified from Validation warmup exercise //
+theForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  if (!nameValidator()) {
+    console.log('Invalid name prevented submission');
     e.preventDefault();
+  }
+
+  if (!emailValidator()) {
+    console.log('Invalid email prevented submission');
+    e.preventDefault();
+  }
+
+  if (!ccNumValidator()) {
+    console.log('Invalid CC Number prevented submission');
+    e.preventDefault();
+  }
+
+  if (!zipValidator()) {
+    console.log('Invalid CC Zip Code prevented submission');
+    e.preventDefault();
+  }
+
+  if (!cvvValidator()) {
+    invalidCVV.hidden = false;
+    console.log('Invalid CC CVV Number prevented submission');
+    e.preventDefault();
+  } else {
+    invalidCVV.hidden = true;
   }
 })
