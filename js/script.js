@@ -46,7 +46,7 @@ const checkBox = actBox.querySelectorAll('input[type="checkbox"]');
 let totalCostSum = 0;
 
 registerForActivities.addEventListener("change", (e) => {
-  //Activities cost & total cost sum
+  //Activities total cost sum
   let dataCost = parseInt(e.target.getAttribute('data-cost'));
   if (e.target.checked) {
     totalCostSum += dataCost;
@@ -134,9 +134,9 @@ function nameValidator() {
   const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(userName.value);
 
   if (nameIsValid) {
-    validationPass(userName)
+    validationPass(userName);
   } else {
-    validationFail(userName)
+    validationFail(userName);
   }
   return nameIsValid;
 }
@@ -148,16 +148,16 @@ function emailValidator() {
   if (emailIsValid) {
     validationPass(userEmail);
   } else {
-    validationFail(userEmail)
+    validationFail(userEmail);
   }
-  return emailIsValid
+  return emailIsValid;
 }
 
 // CC Number Validator -  Added replace method to make it more realistic and appealing. The CC input is applicable for worldwide cc cards that accepts either 2 to 4 last group of numbers  //
 function ccNumValidator() {
   function formatCcNum(text) {
     const regex = /^(\d{4})(\d{4})(\d{4})(\d{2,4})$/;
-    return text.replace(regex, '$1-$2-$3-$4')
+    return text.replace(regex, '$1-$2-$3-$4');
   }
 
   ccNumber.addEventListener("blur", e => {
@@ -169,10 +169,10 @@ function ccNumValidator() {
   if (ccIsValid) {
     validationPass(ccNumber);
   } else {
-    validationFail(ccNumber)
+    validationFail(ccNumber);
   }
-  return ccIsValid
-}
+  return ccIsValid;
+};
 
 // Zipcod Validator - This zipcode is valid for my country Indonesia which is 5 digit zipcode //
 function zipValidator() {
@@ -181,10 +181,10 @@ function zipValidator() {
   if (zipIsValid) {
     validationPass(ccZipCode);
   } else {
-    validationFail(ccZipCode)
+    validationFail(ccZipCode);
   }
-  return zipIsValid
-}
+  return zipIsValid;
+};
 
 // CVV Validator //
 function cvvValidator() {
@@ -193,10 +193,10 @@ function cvvValidator() {
   if (cvvIsValid) {
     validationPass(cvv);
   } else {
-    validationFail(cvv)
+    validationFail(cvv);
   }
-  return cvvIsValid
-}
+  return cvvIsValid;
+};
 
 // Code taken & modified from previous Treehouse Validation exercise //
 const createListener = (validator) => {
@@ -207,7 +207,7 @@ const createListener = (validator) => {
     const tooltip = e.target.nextElementSibling;
     showOrHideTip(showTip, tooltip);
   };
-}
+};
 
 // Code inspired from previous Treehouse Validation exercise. Changed the listener to keyup for a more realistic response from an actual web //
 userName.addEventListener('keyup', createListener(nameValidator));
@@ -247,4 +247,4 @@ theForm.addEventListener("submit", (e) => {
   } else {
     invalidCVV.hidden = true;
   }
-})
+});
