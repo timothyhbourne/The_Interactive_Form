@@ -65,19 +65,15 @@ registerForActivities.addEventListener("change", (e) => {
     }
   }
 
-  //Checks for any conflicting events, for added future events also
+  // Prevents user from booking events during the same day & time
   const dataDayTime = e.target.getAttribute('data-day-and-time');
   for (let i = 0; i < checkBox.length; i++) {
     const currentSelectedTime = checkBox[i].getAttribute('data-day-and-time');
-    if (dataDayTime === currentSelectedTime) {
-      console.log(currentSelectedTime);
-      console.log(dataDayTime)
+    if (currentSelectedTime === dataDayTime && checkBox[i] === currentSelectedTime) {
+
     }
   }
 });
-
-
-
 
 //--------- Payment Section ---------//
 const userSelectedPayment = document.querySelector('#payment');
