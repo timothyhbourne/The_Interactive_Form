@@ -67,10 +67,13 @@ registerForActivities.addEventListener("change", (e) => {
 
   // Prevents user from booking events during the same day & time
   const dataDayTime = e.target.getAttribute('data-day-and-time');
+  // console.log(dataDayTime);
   for (let i = 0; i < checkBox.length; i++) {
     const currentSelectedTime = checkBox[i].getAttribute('data-day-and-time');
-    if (currentSelectedTime === dataDayTime && checkBox[i] === currentSelectedTime) {
-
+    // console.log(currentSelectedTime);
+    if (dataDayTime === currentSelectedTime) {
+      console.log(currentSelectedTime);
+      // console.log(dataDayTime)
     }
   }
 });
