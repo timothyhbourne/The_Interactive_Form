@@ -67,13 +67,16 @@ registerForActivities.addEventListener("change", (e) => {
 
   // Prevents user from booking events during the same day & time
   const dataDayTime = e.target.getAttribute('data-day-and-time');
-  // console.log(dataDayTime);
+  const eventName = e.target.getAttribute('name');
   for (let i = 0; i < checkBox.length; i++) {
-    const currentSelectedTime = checkBox[i].getAttribute('data-day-and-time');
-    // console.log(currentSelectedTime);
-    if (dataDayTime === currentSelectedTime) {
-      console.log(currentSelectedTime);
-      // console.log(dataDayTime)
+    const selectedTime = checkBox[i].getAttribute('data-day-and-time');
+    const selectedName = checkBox[i].getAttribute('name');
+    if (dataDayTime === selectedTime && eventName !== selectedName) {
+      if (e.target.checked) {
+        checkBox[i].disabled = true;
+      } else {
+        checkBox[i].disabled = false;
+      }
     }
   }
 });
@@ -240,6 +243,7 @@ theForm.addEventListener("submit", (e) => {
     e.preventDefault();
   }
 
+  //If CVV is more than 3 numbers an error message will appear
   if (!cvvValidator()) {
     invalidCVV.hidden = false;
     console.log('Invalid CC CVV Number prevented submission');
