@@ -134,7 +134,7 @@ input {
 
 input:focus {
   background: rgba(255, 255, 255, 1);
-  border: 2px solid rgb(9, 73, 250);
+  border-color: rgb(9, 73, 250);
 }
 
 input:-webkit-autofill {
@@ -177,7 +177,7 @@ select:focus {
   background: url(../img/caret.png) calc(100% - 7px) 50% no-repeat
     rgba(255, 255, 255, 1) !important;
   background-size: 12px auto !important;
-  border: 2px solid rgb(9, 73, 250);
+  border-color: rgb(9, 73, 250);
 }
 
 select:disabled {
@@ -245,7 +245,7 @@ button:hover {
 }
 
 .not-valid .error-border {
-  border: 2px solid red;
+  border: 1px solid red;
 }
 
 .not-valid legend {
@@ -475,8 +475,8 @@ button:hover {
 ==================================== */
 
 .focus {
-  background: rgba(9, 73, 250, 0.08) !important;
-  border: 2px solid rgb(9, 73, 250) !important;
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: rgb(9, 73, 250) !important;
 }
 
 .disabled {

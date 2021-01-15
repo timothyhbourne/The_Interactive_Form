@@ -73,9 +73,12 @@ registerForActivities.addEventListener("change", (e) => {
     const selectedName = checkBox[i].getAttribute('name');
     if (dataDayTime === selectedTime && eventName !== selectedName) {
       if (e.target.checked) {
+        checkBox[i].parentElement.classList.add('disabled');
         checkBox[i].disabled = true;
+        console.log(checkBox[i]);
       } else {
         checkBox[i].disabled = false;
+        checkBox[i].parentElement.classList.remove('disabled');
       }
     }
   }
@@ -117,7 +120,6 @@ const cvv = document.querySelector('#cvv')
 const theForm = document.querySelector('form');
 const invalidCVV = document.querySelector('#invalid-cvv');
 
-invalidCVV.hidden = true;
 
 // Validation functions that will pass / fail according to the required input //
 function validationPass(element) {
@@ -132,14 +134,18 @@ function validationFail(element) {
 }
 
 // Form validators for each input field (Name, Email, CC Number, Zip, CVV) //
-// Name Validator // 
+// Name Validator - A different text will appear if user also inputs a number in name field// 
 function nameValidator() {
   const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(userName.value);
+  const nameContainsNumber = /[0-9]/.test(userName.value);
 
   if (nameIsValid) {
     validationPass(userName);
+  } else if (nameContainsNumber) {
+    document.querySelector('#name-hint').innerHTML = 'Name field cannot be a number'
   } else {
     validationFail(userName);
+    document.querySelector('#name-hint').innerHTML = 'Name field cannot be empty'
   }
   return nameIsValid;
 }
@@ -147,7 +153,6 @@ function nameValidator() {
 // Email Validator //
 function emailValidator() {
   const emailIsValid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(userEmail.value);
-
   if (emailIsValid) {
     validationPass(userEmail);
   } else {
@@ -156,7 +161,7 @@ function emailValidator() {
   return emailIsValid;
 }
 
-// CC Number Validator -  Added replace method to make it more realistic and appealing. The CC input is applicable for worldwide cc cards that accepts either 2 to 4 last group of numbers  //
+// CC Number Validator -  Added replace method to make it more realistic and appealing. The CC input accepts either 2 to 4 last group of numbers  //
 function ccNumValidator() {
   function formatCcNum(text) {
     const regex = /^(\d{4})(\d{4})(\d{4})(\d{2,4})$/;
@@ -168,7 +173,6 @@ function ccNumValidator() {
   })
 
   let ccIsValid = /^(\d{4})(\d{4})(\d{4})(\d{2,4})|(\d{4})-(\d{4})-(\d{4})-(\d{2,4})$/.test(ccNumber.value);
-
   if (ccIsValid) {
     validationPass(ccNumber);
   } else {
@@ -180,7 +184,6 @@ function ccNumValidator() {
 // Zipcod Validator - This zipcode is valid for my country Indonesia which is 5 digit zipcode //
 function zipValidator() {
   let zipIsValid = /^\d{5}$/.test(ccZipCode.value);
-
   if (zipIsValid) {
     validationPass(ccZipCode);
   } else {
@@ -192,7 +195,6 @@ function zipValidator() {
 // CVV Validator //
 function cvvValidator() {
   let cvvIsValid = /^\d{3}$/.test(cvv.value);
-
   if (cvvIsValid) {
     validationPass(cvv);
   } else {
@@ -201,7 +203,16 @@ function cvvValidator() {
   return cvvIsValid;
 };
 
+// Function to show/hide tips for empty/incorrect fields
 // Code taken & modified from previous Treehouse Validation exercise //
+function showOrHideTip(show, element) {
+  if (show) {
+    element.style.display = "inherit";
+  } else {
+    element.style.display = "none";
+  }
+}
+
 const createListener = (validator) => {
   return e => {
     const text = e.target.valid;
@@ -221,34 +232,9 @@ cvv.addEventListener('keyup', createListener(cvvValidator));
 
 // Form submission - Some of the code here was taken & modified from Validation warmup exercise //
 theForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  if (!nameValidator()) {
-    console.log('Invalid name prevented submission');
-    e.preventDefault();
-  }
-
-  if (!emailValidator()) {
-    console.log('Invalid email prevented submission');
-    e.preventDefault();
-  }
-
-  if (!ccNumValidator()) {
-    console.log('Invalid CC Number prevented submission');
-    e.preventDefault();
-  }
-
-  if (!zipValidator()) {
-    console.log('Invalid CC Zip Code prevented submission');
-    e.preventDefault();
-  }
-
-  //If CVV is more than 3 numbers an error message will appear
-  if (!cvvValidator()) {
-    invalidCVV.hidden = false;
-    console.log('Invalid CC CVV Number prevented submission');
-    e.preventDefault();
+  if (nameValidator && emailValidator && ccNumValidator && zipValidator && cvvValidator) {
+    theForm.submit();
   } else {
-    invalidCVV.hidden = true;
+    e.preventDefault();
   }
 });
