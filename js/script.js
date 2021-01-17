@@ -43,6 +43,10 @@ const totalCost = document.querySelector('#activities-cost');
 const actBox = document.querySelector('#activities-box');
 const checkBox = actBox.querySelectorAll('input[type="checkbox"]');
 
+for (let i = 0; i < checkBox.length; i++) {
+  checkBox[i].parentElement.setAttribute('tabindex', `${i}`)
+}
+
 let totalCostSum = 0;
 
 registerForActivities.addEventListener("change", (e) => {
@@ -195,7 +199,6 @@ function activityValidator() {
   return false;
 };
 
-  console.log(registerForActivities.lastElementChild);
 // Zipcod Validator - This zipcode is valid for my country Indonesia which is 5 digit zipcode //
 function zipValidator() {
   let zipIsValid = /^\d{5}$/.test(ccZipCode.value);
