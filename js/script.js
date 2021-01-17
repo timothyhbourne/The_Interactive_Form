@@ -48,6 +48,7 @@ let totalCostSum = 0;
 registerForActivities.addEventListener("change", (e) => {
   //Activities total cost sum
   let dataCost = parseInt(e.target.getAttribute('data-cost'));
+  
   if (e.target.checked) {
     totalCostSum += dataCost;
   } else {
@@ -75,7 +76,6 @@ registerForActivities.addEventListener("change", (e) => {
       if (e.target.checked) {
         checkBox[i].parentElement.classList.add('disabled');
         checkBox[i].disabled = true;
-        console.log(checkBox[i]);
       } else {
         checkBox[i].disabled = false;
         checkBox[i].parentElement.classList.remove('disabled');
@@ -142,6 +142,7 @@ function nameValidator() {
   if (nameIsValid) {
     validationPass(userName);
   } else if (nameContainsNumber) {
+    validationFail(userName);
     document.querySelector('#name-hint').innerHTML = 'Name field cannot be a number'
   } else {
     validationFail(userName);
@@ -181,6 +182,20 @@ function ccNumValidator() {
   return ccIsValid;
 };
 
+function activityValidator() {
+  for (let i = 0; i < checkBox.length; i++) {
+    if (checkBox[i].checked) {
+      validationPass(actBox);
+      registerForActivities.lastElementChild.style.display = 'none';
+      return true;
+    }
+  };
+  validationFail(actBox);
+  registerForActivities.lastElementChild.style.display = 'inherit';
+  return false;
+};
+
+  console.log(registerForActivities.lastElementChild);
 // Zipcod Validator - This zipcode is valid for my country Indonesia which is 5 digit zipcode //
 function zipValidator() {
   let zipIsValid = /^\d{5}$/.test(ccZipCode.value);
@@ -221,7 +236,7 @@ const createListener = (validator) => {
     const tooltip = e.target.nextElementSibling;
     showOrHideTip(showTip, tooltip);
   };
-};
+}; 
 
 // Code inspired from previous Treehouse Validation exercise. Changed the listener to keyup for a more realistic response from an actual web //
 userName.addEventListener('keyup', createListener(nameValidator));
@@ -230,10 +245,18 @@ ccNumber.addEventListener('keyup', createListener(ccNumValidator));
 ccZipCode.addEventListener('keyup', createListener(zipValidator));
 cvv.addEventListener('keyup', createListener(cvvValidator));
 
+
 // Form submission - Some of the code here was taken & modified from Validation warmup exercise //
 theForm.addEventListener("submit", (e) => {
-  if (nameValidator && emailValidator && ccNumValidator && zipValidator && cvvValidator) {
-    theForm.submit();
+  if (nameValidator() && emailValidator() && ccNumValidator() && zipValidator() && cvvValidator() && activityValidator()) {
+    console.log('Form Submitted, Payment: CC');
+    e.preventDefault();
+  } else if (userSelectedPayment.value === "paypal" && nameValidator()  && emailValidator() && activityValidator()) {
+    console.log('Form Submitted, Payment: PayPal');
+    e.preventDefault();
+  } else if (userSelectedPayment.value === "bitcoin" && nameValidator()  && emailValidator() && activityValidator()) {
+    console.log('Form Submitted, Payment: BitCoin');
+    e.preventDefault();
   } else {
     e.preventDefault();
   }
