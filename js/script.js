@@ -1,4 +1,5 @@
 // Focuses on name input when page loads
+const theForm = document.querySelector('form');
 const userName = document.querySelector('#name');
 userName.focus();
 
@@ -44,7 +45,7 @@ const actBox = document.querySelector('#activities-box');
 const checkBox = actBox.querySelectorAll('input[type="checkbox"]');
 
 for (let i = 0; i < checkBox.length; i++) {
-  checkBox[i].parentElement.setAttribute('tabindex', `${i}`)
+  checkBox[i].parentElement.setAttribute('tabindex', `0`)
 }
 
 let totalCostSum = 0;
@@ -121,7 +122,6 @@ const userEmail = document.querySelector('#email');
 const ccNumber = document.querySelector('#cc-num');
 const ccZipCode = document.querySelector('#zip');
 const cvv = document.querySelector('#cvv')
-const theForm = document.querySelector('form');
 const invalidCVV = document.querySelector('#invalid-cvv');
 
 
