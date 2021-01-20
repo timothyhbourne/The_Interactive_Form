@@ -44,9 +44,16 @@ const totalCost = document.querySelector('#activities-cost');
 const actBox = document.querySelector('#activities-box');
 const checkBox = actBox.querySelectorAll('input[type="checkbox"]');
 
-for (let i = 0; i < checkBox.length; i++) {
-  checkBox[i].parentElement.setAttribute('tabindex', `0`)
-}
+actBox.addEventListener('focusin', (e) => {
+  for (let i = 0; i < checkBox.length; i++) {
+    let labels = checkBox[i].parentNode;
+    if (e.target.blur()) {
+      labels[i].classList.add('focus');
+    } else {
+      labels[i].classList.remove('focus')
+    }
+  }
+})
 
 let totalCostSum = 0;
 
@@ -147,7 +154,7 @@ function nameValidator() {
     validationPass(userName);
   } else if (nameContainsNumber) {
     validationFail(userName);
-    document.querySelector('#name-hint').innerHTML = 'Name field cannot be a number'
+    document.querySelector('#name-hint').innerHTML = 'Name field cannot contain a number'
   } else {
     validationFail(userName);
     document.querySelector('#name-hint').innerHTML = 'Name field cannot be empty'
@@ -169,7 +176,7 @@ function emailValidator() {
 // CC Number Validator -  Added replace method to make it more realistic and appealing. The CC input accepts either 2 to 4 last group of numbers  //
 function ccNumValidator() {
   function formatCcNum(text) {
-    const regex = /^(\d{4})(\d{4})(\d{4})(\d{2,4})$/;
+    const regex = /^(\d{4})(\d{4})(\d{4})(\d{1,4})$/;
     return text.replace(regex, '$1-$2-$3-$4');
   }
 
@@ -177,7 +184,7 @@ function ccNumValidator() {
     e.target.value = formatCcNum(e.target.value);
   })
 
-  let ccIsValid = /^(\d{4})(\d{4})(\d{4})(\d{2,4})|(\d{4})-(\d{4})-(\d{4})-(\d{2,4})$/.test(ccNumber.value);
+  let ccIsValid = /^(\d{4})(\d{4})(\d{4})(\d{1,4})|(\d{4})-(\d{4})-(\d{4})-(\d{1,4})$/.test(ccNumber.value);
   if (ccIsValid) {
     validationPass(ccNumber);
   } else {
@@ -252,15 +259,23 @@ cvv.addEventListener('keyup', createListener(cvvValidator));
 // Form submission - Some of the code here was taken & modified from Validation warmup exercise //
 theForm.addEventListener("submit", (e) => {
   if (nameValidator() && emailValidator() && ccNumValidator() && zipValidator() && cvvValidator() && activityValidator()) {
+    theForm.submit();
     console.log('Form Submitted, Payment: CC');
-    e.preventDefault();
-  } else if (userSelectedPayment.value === "paypal" && nameValidator()  && emailValidator() && activityValidator()) {
-    console.log('Form Submitted, Payment: PayPal');
-    e.preventDefault();
-  } else if (userSelectedPayment.value === "bitcoin" && nameValidator()  && emailValidator() && activityValidator()) {
-    console.log('Form Submitted, Payment: BitCoin');
-    e.preventDefault();
   } else {
-    e.preventDefault();
+    e.preventDefault()
+  }
+
+  if (userSelectedPayment.value === "paypal" && nameValidator()  && emailValidator() && activityValidator()) {
+    theForm.submit();
+    console.log('Form Submitted, Payment: PayPal');
+  } else {
+    e.preventDefault()
+  }
+
+  if (userSelectedPayment.value === "bitcoin" && nameValidator()  && emailValidator() && activityValidator()) {
+    theForm.submit();
+    console.log('Form Submitted, Payment: BitCoin');
+  } else {
+    e.preventDefault()
   }
 });
