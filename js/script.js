@@ -39,21 +39,21 @@ shirtDesign.addEventListener("change", (e) => {
 })
 
 //--------- Activity Section ---------//
+let checkedActivities = 0;
 const registerForActivities = document.querySelector('#activities');
+const activitiesHint = document.querySelector('#activities-hint')
 const totalCost = document.querySelector('#activities-cost');
 const actBox = document.querySelector('#activities-box');
 const checkBox = actBox.querySelectorAll('input[type="checkbox"]');
 
-actBox.addEventListener('focusin', (e) => {
-  for (let i = 0; i < checkBox.length; i++) {
-    let labels = checkBox[i].parentNode;
-    if (e.target.blur()) {
-      labels[i].classList.add('focus');
-    } else {
-      labels[i].classList.remove('focus')
-    }
-  }
-})
+for (let i = 0; i < checkBox.length; i++) {
+  checkBox[i].addEventListener('focus', (e) => {
+    e.target.parentElement.classList.add('focus');
+  });
+  checkBox[i].addEventListener('blur', (e) => {
+    e.target.parentElement.classList.remove('focus');
+  });
+}
 
 let totalCostSum = 0;
 
@@ -72,9 +72,11 @@ registerForActivities.addEventListener("change", (e) => {
   for (let i = 0; i < checkBox.length; i++) {
     let label = checkBox[i].parentNode;
     if (checkBox[i].checked) {
+      checkedActivities += 1; 
       label.classList.add('focus');
     } else {
       label.classList.remove('focus');
+      checkedActivities -= 1;
     }
   }
 
@@ -194,15 +196,24 @@ function ccNumValidator() {
 };
 
 function activityValidator() {
+  // for (let i = 0; i < checkBox.length; i++) {
+  //   if (checkBox[i].checked) {
+  //     validationPass(actBox.parentNode);
+  //     activitiesHint.style.display = 'none';
+  //     return true;
+  //   }
+  // };
+  // validationFail(actBox.parentNode);
+  // activitiesHint.style.display = 'block';
+  // return false;
   for (let i = 0; i < checkBox.length; i++) {
-    if (checkBox[i].checked) {
-      validationPass(actBox);
-      registerForActivities.lastElementChild.style.display = 'none';
-      return true;
-    }
-  };
+      if (checkBox[i].checked) { 
+        validationPass(actBox);
+        return true
+      }
+  }
   validationFail(actBox);
-  registerForActivities.lastElementChild.style.display = 'inherit';
+  actBox.parentNode.classList.add('not-valid');
   return false;
 };
 
@@ -255,27 +266,71 @@ ccNumber.addEventListener('keyup', createListener(ccNumValidator));
 ccZipCode.addEventListener('keyup', createListener(zipValidator));
 cvv.addEventListener('keyup', createListener(cvvValidator));
 
-
-// Form submission - Some of the code here was taken & modified from Validation warmup exercise //
-theForm.addEventListener("submit", (e) => {
-  if (nameValidator() && emailValidator() && ccNumValidator() && zipValidator() && cvvValidator() && activityValidator()) {
-    theForm.submit();
-    console.log('Form Submitted, Payment: CC');
+// Submits form, checks for errors. Will not submit if some inputs are invalid. 
+theForm.addEventListener('submit', (e) => {
+  if (!nameValidator()) {
+      e.preventDefault();
+      validationFail(userName)
   } else {
-    e.preventDefault()
+      validationPass(userName)
+  }
+  if (!emailValidator()) {
+      e.preventDefault();
+      validationFail(userEmail)
+  } else {
+      validationPass(userEmail)
   }
 
-  if (userSelectedPayment.value === "paypal" && nameValidator()  && emailValidator() && activityValidator()) {
+  if (checkedActivities === 0) {
+      e.preventDefault();
+      activitiesHint.style.display = 'block';
+      activityValidator();
+  } else {
+      activitiesHint.style.display = 'none';
+      activityValidator();
+  }
+
+  if (userSelectedPayment.value === 'credit-card') {
+    let check = 0;
+    if (!ccNumValidator()) {
+      e.preventDefault();
+      validationFail(ccNumber)
+    } else {
+      validationPass(ccNumber)
+      check += 1;
+    }
+    if (!zipValidator()) {
+      e.preventDefault();
+      validationFail(ccZipCode)
+    } else {
+      validationPass(ccZipCode)
+      check += 1;
+    }
+    if (!cvvValidator()) {
+      e.preventDefault();
+      validationFail(cvv)
+    } else {
+      validationPass(cvv);
+      check += 1;
+    };
+    if (check === 3 && nameValidator() && emailValidator() && activityValidator()) {
+      theForm.submit();
+    } else {
+      e.preventDefault()
+    }
+  }
+  
+  if (userSelectedPayment.value === "paypal" && nameValidator() && emailValidator() && activityValidator()) {
     theForm.submit();
     console.log('Form Submitted, Payment: PayPal');
   } else {
-    e.preventDefault()
+    e.preventDefault();
   }
 
-  if (userSelectedPayment.value === "bitcoin" && nameValidator()  && emailValidator() && activityValidator()) {
+  if (userSelectedPayment.value === "bitcoin" && nameValidator() && emailValidator() && activityValidator()) {
     theForm.submit();
     console.log('Form Submitted, Payment: BitCoin');
   } else {
-    e.preventDefault()
+    e.preventDefault();
   }
 });
