@@ -186,7 +186,7 @@ function ccNumValidator() {
     e.target.value = formatCcNum(e.target.value);
   })
 
-  let ccIsValid = /^(\d{4})(\d{4})(\d{4})(\d{1,4})|(\d{4})-(\d{4})-(\d{4})-(\d{1,4})$/.test(ccNumber.value);
+  let ccIsValid = /^(\d{4})(\d{4})(\d{4})(\d{1,4})$|^(\d{4})-(\d{4})-(\d{4})-(\d{1,4})$/.test(ccNumber.value);
   if (ccIsValid) {
     validationPass(ccNumber);
   } else {
