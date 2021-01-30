@@ -7,5 +7,7 @@
  To ensure that the site is as accessible as it can be, user can "Tab" through each field within the form. 
  - Payment Flexibility
  The form will still submit and react the same if the user chooses to pay using any of the payment methods. 
+ - Credit Card Number Replace
+ Added a replace method on the CC number input to separate the final cc input using a dash in between 4 numbers. Created this to make the website feel more "real".
  - Real Time Validation
  The form will validate the user input during real time. This real time validation is applied into the Name, Email, Activities, and Payment input.

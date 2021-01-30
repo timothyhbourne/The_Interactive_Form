@@ -40,6 +40,8 @@ shirtDesign.addEventListener("change", (e) => {
 
 //--------- Activity Section ---------//
 let checkedActivities = 0;
+let totalCostSum = 0;
+
 const registerForActivities = document.querySelector('#activities');
 const activitiesHint = document.querySelector('#activities-hint')
 const totalCost = document.querySelector('#activities-cost');
@@ -54,8 +56,6 @@ for (let i = 0; i < checkBox.length; i++) {
     e.target.parentElement.classList.remove('focus');
   });
 }
-
-let totalCostSum = 0;
 
 registerForActivities.addEventListener("change", (e) => {
   //Activities total cost sum
@@ -133,7 +133,6 @@ const ccZipCode = document.querySelector('#zip');
 const cvv = document.querySelector('#cvv')
 const invalidCVV = document.querySelector('#invalid-cvv');
 
-
 // Validation functions that will pass / fail according to the required input //
 function validationPass(element) {
   element.parentElement.classList.add('valid');
@@ -175,7 +174,7 @@ function emailValidator() {
   return emailIsValid;
 }
 
-// CC Number Validator -  Added replace method to make it more realistic and appealing. The CC input accepts either 2 to 4 last group of numbers  //
+// CC Number Validator -  Added replace method to make it more realistic and appealing.//
 function ccNumValidator() {
   function formatCcNum(text) {
     const regex = /^(\d{4})(\d{4})(\d{4})(\d{1,4})$/;
@@ -196,16 +195,6 @@ function ccNumValidator() {
 };
 
 function activityValidator() {
-  // for (let i = 0; i < checkBox.length; i++) {
-  //   if (checkBox[i].checked) {
-  //     validationPass(actBox.parentNode);
-  //     activitiesHint.style.display = 'none';
-  //     return true;
-  //   }
-  // };
-  // validationFail(actBox.parentNode);
-  // activitiesHint.style.display = 'block';
-  // return false;
   for (let i = 0; i < checkBox.length; i++) {
       if (checkBox[i].checked) { 
         validationPass(actBox);
