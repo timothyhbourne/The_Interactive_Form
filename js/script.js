@@ -217,7 +217,7 @@ function activityValidator() {
   return false;
 };
 
-// Zipcod Validator - This zipcode is valid for my country Indonesia which is 5 digit zipcode //
+// Zipcode Validator //
 function zipValidator() {
   let zipIsValid = /^\d{5}$/.test(ccZipCode.value);
   if (zipIsValid) {
